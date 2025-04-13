@@ -466,7 +466,7 @@ export default function AttendanceCorrection({ attendanceData, isLoading, setIsL
                     style={{width: '100%', padding: '8px 12px'}}
                     value={correctionReason}
                     onChange={(e) => setCorrectionReason(e.target.value)}
-                    placeholder="출결기록 정정 사유를 상세히 기재해주세요"
+                    placeholder="출결기록 정정 사유를 간단히 기재해주세요"
                   />
                 </div>
               </div>

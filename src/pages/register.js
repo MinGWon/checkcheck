@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +21,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [ccode, setCcode] = useState(""); // New state for C code
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -36,13 +38,44 @@ export default function Register() {
       return;
     }
 
+    // C code validation
+    if (!ccode) {
+      setError("C코드를 입력해주세요.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      // First validate the C code
+      const codeResponse = await fetch("/api/auth/validate-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code: ccode }),
+      });
+
+      const codeData = await codeResponse.json();
+
+      if (!codeResponse.ok) {
+        // Use SweetAlert2 for invalid C code message
+        Swal.fire({
+          icon: 'error',
+          title: '오류',
+          text: '유효하지 않은 C코드입니다.',
+          confirmButtonText: '확인'
+        });
+        setLoading(false);
+        return;
+      }
+
+      // If code is valid, proceed with registration
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, password, name, email }),
+        body: JSON.stringify({ userId, password, name, email, ccode }),
       });
 
       const data = await response.json();
@@ -132,6 +165,22 @@ export default function Register() {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
               />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="ccode">C코드</label>
+              <input
+                type="text"
+                id="ccode"
+                value={ccode}
+                onChange={(e) => setCcode(e.target.value)}
+                required
+                className={styles.input}
+                placeholder="C코드 입력"
+              />
+              <small className={styles.helperText}>
+                <i>예: C12345678</i>
+              </small>
             </div>
             
             <button 

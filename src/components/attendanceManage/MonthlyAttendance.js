@@ -22,6 +22,8 @@ export default function MonthlyAttendance({
   const bodyTableRef = useRef(null);
   const headerTableRef = useRef(null);
   
+  const MAX_DATE_COLUMN_WIDTH = '60px';
+
   // Calculate scrollbar width and adjust table dimensions
   useEffect(() => {
     const calculateScrollbarWidth = () => {
@@ -312,12 +314,12 @@ export default function MonthlyAttendance({
                 }}
               >
                 <colgroup>
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '13px' }} /> {/* Reduced from 15% */}
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '13px' }} />
                   {filteredDates.map(date => (
-                    <col key={`header-col-${date}`} style={{ width: `${81 / filteredDates.length}%` }} /> 
+                    <col key={`header-col-${date}`} style={{ width: filteredDates.length <= 5 ? MAX_DATE_COLUMN_WIDTH : `${81 / filteredDates.length}%` }} />
                   ))}
                 </colgroup>
                 <thead>
@@ -334,7 +336,11 @@ export default function MonthlyAttendance({
                     {filteredDates.map(date => (
                       <th key={date} rowSpan="2" style={{ 
                         border: '1px solid #dee2e6', 
-                        borderTop: 'none' 
+                        borderTop: 'none',
+                        maxWidth: MAX_DATE_COLUMN_WIDTH,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
                       }}>{formatDate(date)}</th>
                     ))}
                   </tr>
@@ -379,12 +385,12 @@ export default function MonthlyAttendance({
                 }}
               >
                 <colgroup>
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '5px' }} /> {/* Reduced from 5% */}
-                  <col style={{ width: '13px' }} /> {/* Reduced from 15% */}
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '5px' }} />
+                  <col style={{ width: '13px' }} />
                   {filteredDates.map(date => (
-                    <col key={`body-col-${date}`} style={{ width: `${81 / filteredDates.length}%` }} />
+                    <col key={`body-col-${date}`} style={{ width: filteredDates.length <= 5 ? MAX_DATE_COLUMN_WIDTH : `${81 / filteredDates.length}%` }} />
                   ))}
                 </colgroup>
                 <tbody>
@@ -412,7 +418,13 @@ export default function MonthlyAttendance({
                           <td 
                             key={`${student.stdid}-${date}`} 
                             className={styles.attendanceCell} 
-                            style={{ border: '1px solid #dee2e6', borderTop: 'none' }}
+                            style={{ 
+                              border: '1px solid #dee2e6', 
+                              borderTop: 'none',
+                              maxWidth: MAX_DATE_COLUMN_WIDTH,
+                              overflow: 'hidden',
+                              textAlign: 'center'
+                            }}
                           >
                             {renderAttendanceIcon(getAttendanceStatus(student.stdid, date, attendanceData.attendanceLogs))}
                           </td>

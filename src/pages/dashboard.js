@@ -276,7 +276,7 @@ export default function Dashboard() {
               <h2 className={styles.pageTitle}>
                 {activePage === 'dashboard' && '대시보드'}
                 {activePage === 'users' && '출결 관리'}
-                {activePage === 'products' && '상품 관리'}
+                {activePage === 'products' && '학생 관리'}
                 {activePage === 'orders' && '문서 관리'}
                 {activePage === 'settings' && '업데이트 기록'}
               </h2>

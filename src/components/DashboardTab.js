@@ -181,7 +181,7 @@ export default function DashboardTab() {
         </div>
         <div className={styles.cardBody}>
           <div className={styles.stat}>
-            <i className="fas fa-won-sign"></i>
+            <i className="fas fa-calendar"></i>
             <div className={styles.statInfo}>
               <span className={styles.statValue}>{currentDateTime.date}</span>
               <span className={styles.statTimeValue}>{currentDateTime.time}</span>
@@ -189,6 +189,9 @@ export default function DashboardTab() {
           </div>
         </div>
       </div>
+      
+      {/* New row for Recent Activities */}
+      <div className={styles.fullWidthBreak}></div>
       
       <div className={`${styles.card} ${styles.largeCard}`}>
         <div className={styles.cardHeader}>

@@ -7,10 +7,20 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userId, password, name, email } = req.body;
+    const { userId, password, name, email, ccode } = req.body;
 
-    if (!userId || !password) {
-      return res.status(400).json({ message: "아이디와 비밀번호는 필수 입력사항입니다." });
+    if (!userId || !password || !ccode) {
+      return res.status(400).json({ message: "아이디, 비밀번호, 그리고 C코드는 필수 입력사항입니다." });
+    }
+
+    // Validate that the code exists and is active
+    const [codeResult] = await db.query(
+      "SELECT * FROM codes WHERE code = ? AND isActive = 1",
+      [ccode]
+    );
+
+    if (codeResult.length === 0) {
+      return res.status(400).json({ message: "유효하지 않은 C코드입니다." });
     }
 
     // Check if user already exists
@@ -29,8 +39,8 @@ export default async function handler(req, res) {
 
     // Insert the new user
     await db.query(
-      "INSERT INTO users (user_id, password, name, email) VALUES (?, ?, ?, ?)",
-      [userId, hashedPassword, name || null, email || null]
+      "INSERT INTO users (user_id, password, name, email, registration_code) VALUES (?, ?, ?, ?, ?)",
+      [userId, hashedPassword, name || null, email || null, ccode]
     );
 
     return res.status(201).json({ message: "회원가입이 완료되었습니다." });

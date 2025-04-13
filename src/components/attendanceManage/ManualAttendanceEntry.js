@@ -291,7 +291,7 @@ export default function ManualAttendanceEntry({ attendanceData, isLoading, setIs
                             style={{width: '100%', padding: '8px 12px'}}
                             value={manualReason}
                             onChange={(e) => setManualReason(e.target.value)}
-                            placeholder="출결기록 추가 사유를 상세히 기재해주세요"
+                            placeholder="출결기록 추가 사유를 간단히 기재해주세요"
                           />
                         </div>
                         

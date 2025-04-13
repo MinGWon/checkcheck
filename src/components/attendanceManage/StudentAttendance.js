@@ -7,48 +7,28 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
   const [studentAttendanceRecords, setStudentAttendanceRecords] = useState([]);
   const [showStudentDetail, setShowStudentDetail] = useState(false);
   
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYearMonth, setSelectedYearMonth] = useState('');
   const [calendarData, setCalendarData] = useState([]);
   
-  const [availableYears, setAvailableYears] = useState([]);
-  const [availableMonths, setAvailableMonths] = useState([]);
+  const [availableYearMonths, setAvailableYearMonths] = useState([]);
 
   useEffect(() => {
-    if (showStudentDetail && studentAttendanceRecords.length > 0) {
+    if (showStudentDetail && studentAttendanceRecords.length > 0 && selectedYearMonth) {
       generateCalendarData();
     }
-  }, [selectedYear, selectedMonth, studentAttendanceRecords, showStudentDetail]);
-
-  useEffect(() => {
-    if (studentAttendanceRecords.length > 0) {
-      const yearMonthCombos = new Map();
-      
-      studentAttendanceRecords.forEach(record => {
-        const [year, month] = record.date.split('-');
-        const yearNum = parseInt(year);
-        const monthNum = parseInt(month);
-        
-        if (!yearMonthCombos.has(yearNum)) {
-          yearMonthCombos.set(yearNum, new Set());
-        }
-        yearMonthCombos.get(yearNum).add(monthNum);
-      });
-      
-      updateAvailableMonths(yearMonthCombos, selectedYear);
-    }
-  }, [selectedYear, studentAttendanceRecords]);
+  }, [selectedYearMonth, studentAttendanceRecords, showStudentDetail]);
 
   const generateCalendarData = () => {
-    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-    const firstDayOfMonth = new Date(selectedYear, selectedMonth - 1, 1).getDay();
+    if (!selectedYearMonth) return;
+    
+    const [year, month] = selectedYearMonth.split('-').map(Number);
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
     
     let calendarDays = Array(firstDayOfMonth).fill(null);
     
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
       const record = studentAttendanceRecords.find(r => r.date === dateStr);
       
       calendarDays.push({
@@ -64,40 +44,24 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
   const extractAvailableDates = (records) => {
     if (!records || records.length === 0) return;
     
-    const yearMonthCombos = new Map();
+    const yearMonthSet = new Set();
     
     records.forEach(record => {
       const [year, month] = record.date.split('-');
-      const yearNum = parseInt(year);
-      const monthNum = parseInt(month);
-      
-      if (!yearMonthCombos.has(yearNum)) {
-        yearMonthCombos.set(yearNum, new Set());
-      }
-      yearMonthCombos.get(yearNum).add(monthNum);
+      yearMonthSet.add(`${year}-${month}`);
     });
     
-    const years = Array.from(yearMonthCombos.keys()).sort((a, b) => b - a);
-    setAvailableYears(years);
+    const yearMonths = Array.from(yearMonthSet).sort((a, b) => {
+      const [yearA, monthA] = a.split('-').map(Number);
+      const [yearB, monthB] = b.split('-').map(Number);
+      if (yearA === yearB) return monthB - monthA;
+      return yearB - yearA;
+    });
     
-    if (years.length > 0 && selectedYear !== years[0]) {
-      setSelectedYear(years[0]);
-    }
+    setAvailableYearMonths(yearMonths);
     
-    updateAvailableMonths(yearMonthCombos, selectedYear);
-  };
-
-  const updateAvailableMonths = (yearMonthCombos, year) => {
-    if (!yearMonthCombos) return;
-    
-    const months = yearMonthCombos.has(year) 
-      ? Array.from(yearMonthCombos.get(year)).sort((a, b) => a - b)
-      : [];
-    
-    setAvailableMonths(months);
-    
-    if (months.length > 0 && !months.includes(selectedMonth)) {
-      setSelectedMonth(months[0]);
+    if (yearMonths.length > 0) {
+      setSelectedYearMonth(yearMonths[0]);
     }
   };
 
@@ -165,8 +129,6 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
       
       extractAvailableDates(records);
       
-      generateCalendarData();
-      
     } catch (error) {
       console.error('Error fetching student attendance data:', error);
       setStudentAttendanceRecords([]);
@@ -186,43 +148,28 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
     setShowStudentDetail(false);
     setSelectedStudent(null);
     setStudentAttendanceRecords([]);
+    setAvailableYearMonths([]);
+    setSelectedYearMonth('');
   };
 
   const handleStudentSelect = (e) => {
     const stdid = e.target.value;
     const student = attendanceData.students.find(s => s.stdid === stdid);
     setSelectedStudent(student || null);
+    
+    setAvailableYearMonths([]);
+    setSelectedYearMonth('');
+    setShowStudentDetail(false);
   };
 
-  const handleYearChange = (year) => {
-    setSelectedYear(Number(year));
+  const handleYearMonthChange = (e) => {
+    setSelectedYearMonth(e.target.value);
   };
 
-  const handleMonthChange = (month) => {
-    setSelectedMonth(Number(month));
-  };
-
-  const getStatusClass = (status) => {
-    if (!status) return styles.noData;
-    switch(status) {
-      case 'onTime': return styles.statusOnTime;
-      case 'late': return styles.statusLate;
-      case 'absent': return styles.statusAbsent;
-      default: return '';
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'onTime': return '✅';
-      case 'late': return '⚠️';
-      case 'absent': return '❌';
-      default: return '';
-    }
-  };
-  
-  const isWeekend = (index) => {
-    return index % 7 === 0 || index % 7 === 6;
+  const formatYearMonth = (yearMonth) => {
+    if (!yearMonth) return '';
+    const [year, month] = yearMonth.split('-');
+    return `${year}년 ${month}월`;
   };
 
   return (
@@ -246,12 +193,40 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
               <option value="">학생을 선택하세요</option>
               {attendanceData.students.map(student => {
                 const { grade, class: classNum, number } = parseStudentId(student.stdid);
+                // Zero-pad the number to ensure 2 digits
+                const paddedNumber = number.toString().padStart(2, '0');
                 return (
                   <option key={student.stdid} value={student.stdid}>
-                    ({grade}-{classNum}-{number}) {student.name}
+                    ({grade}{classNum}{paddedNumber}) {student.name}
                   </option>
                 );
               })}
+            </select>
+          </div>
+        </div>
+        
+        <div className={styles.searchGroup}>
+          <label htmlFor="yearMonthSelect">출석 기간</label>
+          <div className={styles.searchControls}>
+            <select 
+              id="yearMonthSelect" 
+              className={styles.select}
+              value={selectedYearMonth}
+              onChange={handleYearMonthChange}
+              disabled={!selectedStudent}
+            >
+              <option value="">기간 선택</option>
+              {availableYearMonths.length > 0 ? (
+                availableYearMonths.map(yearMonth => (
+                  <option key={yearMonth} value={yearMonth}>
+                    {formatYearMonth(yearMonth)}
+                  </option>
+                ))
+              ) : (
+                <option value={`${new Date().getFullYear()}-${new Date().getMonth() + 1}`}>
+                  {`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월`}
+                </option>
+              )}
             </select>
             
             <button 
@@ -281,31 +256,6 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
                 {selectedStudent.name} ({parseStudentId(selectedStudent.stdid).grade}학년 {parseStudentId(selectedStudent.stdid).class}반 {parseStudentId(selectedStudent.stdid).number}번)
               </h4>
               <div className={styles.dateControlsWrapper}>
-                <div className={styles.dateControlsLabel}>출석 기간:</div>
-                <div className={styles.dateButtonsContainer}>
-                  <div className={styles.yearButtons}>
-                    {availableYears.map(year => (
-                      <button
-                        key={year}
-                        onClick={() => handleYearChange(year)}
-                        className={`${styles.yearButton} ${selectedYear === year ? styles.selectedDateButton : ''}`}
-                      >
-                        {year}년
-                      </button>
-                    ))}
-                  </div>
-                  <div className={styles.monthButtons}>
-                    {availableMonths.map(month => (
-                      <button
-                        key={month}
-                        onClick={() => handleMonthChange(month)}
-                        className={`${styles.monthButton} ${selectedMonth === month ? styles.selectedDateButton : ''}`}
-                      >
-                        {month}월
-                      </button>
-                    ))}
-                  </div>
-                </div>
                 <button 
                   className={styles.backButton}
                   onClick={closeStudentDetail}
@@ -315,11 +265,11 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
               </div>
             </div>
             
-            {studentAttendanceRecords.length > 0 ? (
+            {studentAttendanceRecords.length > 0 && selectedYearMonth ? (
               <>
                 <div className={styles.realCalendar}>
                   <div className={styles.calendarMonth}>
-                    {selectedYear}년 {selectedMonth}월
+                    {formatYearMonth(selectedYearMonth)}
                   </div>
                   
                   <table className={styles.calendarTable}>
@@ -362,7 +312,7 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
                                           {day.status === 'onTime' && (
                                             <div className={styles.onTimeStatus}>
                                               출석
-                                              <div className={styles.attendanceTime}>{day.time}</div>
+                                              <div className={styles.attendanceTime} style={{ color: '#28a745' }}>{day.time}</div>
                                             </div>
                                           )}
                                           {day.status === 'late' && (
@@ -386,21 +336,6 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
                       )}
                     </tbody>
                   </table>
-                  
-                  <div className={styles.calendarLegend}>
-                    <div className={styles.legendItem}>
-                      <span className={styles.legendIndicator + ' ' + styles.presentIndicator}></span>
-                      <span>출석</span>
-                    </div>
-                    <div className={styles.legendItem}>
-                      <span className={styles.legendIndicator + ' ' + styles.lateIndicator}></span>
-                      <span>지각</span>
-                    </div>
-                    <div className={styles.legendItem}>
-                      <span className={styles.legendIndicator + ' ' + styles.absentIndicator}></span>
-                      <span>결석</span>
-                    </div>
-                  </div>
                 </div>
 
                 <h5 className={styles.listViewHeader}>상세 출석 목록</h5>
@@ -416,7 +351,7 @@ export default function StudentAttendance({ attendanceData, isLoading, setIsLoad
                     {studentAttendanceRecords
                       .filter(record => {
                         const [year, month] = record.date.split('-');
-                        return parseInt(year) === selectedYear && parseInt(month) === selectedMonth;
+                        return `${year}-${month}` === selectedYearMonth;
                       })
                       .map((record, index) => (
                         <tr key={index}>

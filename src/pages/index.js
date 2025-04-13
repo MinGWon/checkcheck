@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 const geistSans = Geist({
@@ -23,7 +23,36 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isExternal, setIsExternal] = useState(false);
+  const [callback, setCallback] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    // URL 파라미터 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const external = urlParams.get('external');
+    const callbackUrl = urlParams.get('callback');
+    const token = urlParams.get('token'); // C# 애플리케이션에서 받은 토큰
+    
+    console.log("로그인 파라미터:", { external, callback: callbackUrl, token });
+    
+    // 외부 로그인 요청인 경우
+    if (external === '1') {
+      setIsExternal(true);
+      
+      // 콜백 URL이 있으면 저장
+      if (callbackUrl) {
+        setCallback(callbackUrl);
+      }
+      
+      // 토큰이 있으면 저장 (C# 애플리케이션에서 전달)
+      if (token) {
+        console.log("토큰 저장:", token);
+        // sessionStorage는 브라우저 탭 내에서만 유효하므로 더 안전
+        sessionStorage.setItem('authToken', token);
+      }
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -51,8 +80,21 @@ export default function Home() {
           sessionExpiry: expiryTime
         }));
         
-        // Redirect to dashboard after successful login
-        router.push("/dashboard");
+        // Check if external login process with callback
+        if (isExternal) {
+          // 저장된 토큰 가져오기
+          const token = sessionStorage.getItem('authToken') || '';
+          console.log("로그인 성공, 토큰:", token);
+          
+          if (callback) {
+            router.push(`/external-callback?callback=${encodeURIComponent(callback)}&token=${token}`);
+          } else {
+            router.push("/external-callback");
+          }
+        } else {
+          // Normal redirect to dashboard
+          router.push("/dashboard");
+        }
       } else {
         setError(data.message || "로그인에 실패했습니다.");
       }
