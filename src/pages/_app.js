@@ -1,5 +1,8 @@
-import "@/styles/globals.css";
+import '@/styles/globals.css' // If you already have global styles
+import '@/styles/print.css' // Add the print styles globally
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
 }
+
+export default MyApp

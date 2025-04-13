@@ -1,6 +1,5 @@
 import styles from "@/styles/Dashboard.module.css";
 import { useState, useEffect } from "react";
-import '../styles/print.css'; // Import the print styles
 import Swal from 'sweetalert2'; // Import SweetAlert2
 
 // Add inline styles for enhanced statistics display
