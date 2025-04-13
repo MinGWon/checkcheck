@@ -1,0 +1,135 @@
+/* Search and action container */
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.search-button, .print-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.search-button:hover {
+  background-color: #43a047;
+}
+
+.print-button {
+  background-color: #2196F3;
+  color: white;
+}
+
+.print-button:hover {
+  background-color: #0b7dda;
+}
+
+/* Print preview section */
+.print-preview {
+  margin-top: 30px;
+  border: 1px dashed #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.print-preview h4 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.student-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.student-card h5 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.preview-table th, .preview-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.preview-table th {
+  width: 30%;
+  color: #666;
+}
+
+/* Form navigation */
+.form-navigation {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-button {
+  background-color: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+/* Print-specific styles */
+@media print {
+  /* Hide everything except the printable area */
+  body * {
+    visibility: hidden;
+  }
+  
+  .print-preview, .print-preview * {
+    visibility: visible;
+  }
+  
+  .print-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Hide the "미리보기" title when printing */
+  .print-preview h4 {
+    display: none;
+  }
+}

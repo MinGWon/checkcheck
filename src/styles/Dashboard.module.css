@@ -1,0 +1,1864 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+/* Top Navigation Bar */
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0 1.5rem;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.topNavLeft {
+  display: flex;
+  align-items: center;
+}
+
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #4b5563;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.topNavRight {
+  display: flex;
+  align-items: center;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.userName {
+  margin-right: 0.75rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.userDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: #ffffff;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 0.5rem;
+  min-width: 150px;
+  z-index: 10;
+  display: none;
+}
+
+.userProfile:hover .userDropdown {
+  display: block;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  color: #4b5563;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.logoutButton:hover {
+  background-color: #f3f4f6;
+}
+
+.logoutButton i {
+  margin-right: 0.5rem;
+}
+
+/* Main Content Layout */
+.mainContent {
+  display: flex;
+  margin-top: 60px;
+  flex-grow: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #1e293b;
+  color: #f3f4f6;
+  height: calc(100vh - 60px);
+  position: fixed;
+  left: 0;
+  top: 60px;
+  z-index: 50;
+  transition: transform 0.3s ease;
+}
+
+.sidebarNav {
+  padding: 1.5rem 0;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.navItem.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-left: 4px solid #2563eb;
+}
+
+.navItem i {
+  width: 20px;
+  margin-right: 0.75rem;
+  font-size: 1rem;
+}
+
+/* Main Content Area */
+.content {
+  flex-grow: 1;
+  padding: 1.5rem;
+  margin-left: 250px;
+  min-height: calc(100vh - 60px);
+}
+
+.pageHeader {
+  margin-bottom: 1.5rem;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+/* Dashboard Specific Styles */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.largeCard {
+  grid-column: span 2;
+}
+
+.cardHeader {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+}
+
+.stat i {
+  font-size: 2rem;
+  color: #2563eb;
+  margin-right: 1rem;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.statTimeValue {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: normal;
+  margin-top: 0.25rem;
+}
+
+.activityList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activityItem {
+  display: flex;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  margin-right: 1rem;
+}
+
+.activityContent {
+  flex-grow: 1;
+}
+
+.activityContent p {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.activityTime {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Table Styles */
+.tableContainer {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dataTable th,
+.dataTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.dataTable th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dataTable tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dataTable tr:last-child {
+  border-bottom: none;
+}
+
+.dataTable tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.actionCell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.iconButton:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.paginationButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  border-radius: 0.25rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Status Badges */
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusPending {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.statusProcessing {
+    background-color: #fef3c7;
+  color: #92400e;
+}
+
+.statusShipping {
+  background-color: #e0e7ff;
+  color: #4338ca;
+}
+
+.statusCompleted {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* Status specific badges */
+.statusOnTime {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.statusLate {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.statusAbsent {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Header with Action */
+.headerWithAction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  background-color: #1d4ed8;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filterSelect {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  background-color: white;
+}
+
+/* Settings Form Styles */
+.settingsContainer {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.settingsSection {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+}
+
+.settingsSection:last-of-type {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.saveButton {
+  padding: 0.625rem 1.25rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background-color: #1d4ed8;
+}
+
+.resetButton {
+  padding: 0.625rem 1.25rem;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  background-color: #e5e7eb;
+}
+
+.select {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  width: 100%;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* Tabs Navigation */
+.tabsContainer {
+  margin-bottom: 1.5rem;
+}
+
+.tabsHeader {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.tabButton {
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+  color: #4b5563;
+}
+
+.activeTab {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+/* Attendance Styles */
+.attendanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.attendanceTable th,
+.attendanceTable td {
+  padding: 0.75rem 0.5rem;
+  border: 1px solid #e5e7eb;
+  text-align: center; /* Center align all cells by default */
+}
+
+.attendanceTable th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* Overwrite text alignment for specific cells */
+.attendanceTable td:nth-child(4) {
+  text-align: center; /* Center align the name column */
+  max-width: 80px; /* Further reduce width of name column to fit text more tightly */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Remove the previous alignment rules that are no longer needed */
+.attendanceTable thead th:first-child,
+.attendanceTable thead th:nth-child(2),
+.attendanceTable tbody td:first-child,
+.attendanceTable tbody td:nth-child(2) {
+  /* Removing these rules as we're now center-aligning everything */
+}
+
+.attendanceCell {
+  text-align: center;
+}
+
+.lateAttendance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.attendanceLate {
+  color: #f59e0b; /* Yellow/amber */
+  font-size: 1.25rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.attendanceTime {
+  font-size: 0.65rem;
+  color: #b45309;
+  margin-top: 0;
+  display: block;
+}
+
+.attendanceOnTime {
+  color: #059669; /* Green */
+  font-size: 1.25rem;
+}
+
+.attendanceAbsent {
+  color: #dc2626; /* Red */
+  font-size: 1.25rem;
+}
+
+.attendanceLegend {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+/* Student ID Cell Styles */
+.groupHeader {
+  background-color: #f3f4f6;
+  text-align: center;
+}
+
+.idCell {
+  text-align: center;
+  font-weight: 500;
+  padding: 0.5rem 0.25rem !important;
+  width: 40px;
+}
+
+/* Search Container Styles */
+.searchContainer {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.searchGroup {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.searchGroup label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.searchControls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.searchControls .select {
+  flex: 1;
+  max-width: 250px;
+}
+
+.searchControls .select:nth-child(2) {
+  max-width: 75px; /* Reduce class selection width to 30% of default 250px */
+  min-width: 75px;
+}
+
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.searchButton:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.searchButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.searchButton i {
+  font-size: 0.875rem;
+}
+
+/* Loading and No Data States */
+.loadingContainer, .noDataMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 0;
+  color: #6b7280;
+}
+
+.loadingContainer i, .noDataMessage i {
+  font-size: 1.25rem;
+  color: #9ca3af;
+}
+
+.noDataMessage {
+  flex-direction: column;
+  padding: 4rem 0;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+  .largeCard {
+    grid-column: span 1;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .menuToggle {
+    display: block;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+  
+  .content {
+    margin-left: 0;
+  }
+}
+
+/* Student Detail Styles */
+.studentDetailCard {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+}
+
+.studentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.studentInfo h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+.backButton:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* Print Button Styles */
+.printButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.printButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.printButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.printButton i {
+  font-size: 0.875rem;
+}
+
+/* Enhanced Form Input Styles */
+.enhancedInput {
+  margin-bottom: 1.5rem;
+}
+
+.enhancedInput label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.enhancedInput label i {
+  margin-right: 0.5rem;
+  color: #2563eb;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.roundedInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #f9fafb;
+}
+
+.roundedInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  outline: none;
+  background-color: #ffffff;
+}
+
+.roundedInput:hover:not(:focus) {
+  border-color: #9ca3af;
+}
+
+.inputInfo {
+  margin-top: 0.5rem;
+}
+
+.formText {
+  display: block;
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Form Grid Layout */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Form Group Style */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formControl {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+/* Centered Form Action */
+.formActionCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+/* Preview Styles */
+.previewContainer {
+  grid-column: 1 / -1;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px dashed #cbd5e1;
+}
+
+.previewContainer h4 {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.studentPreviewCard {
+  background-color: white;
+  border-radius: 6px;
+  padding: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.previewTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.previewTable th,
+.previewTable td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.previewTable th {
+  width: 120px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.previewTable tr:last-child th,
+.previewTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* Correction UI styles */
+.correctionCardContainer {
+  display: flex;
+  align-items: stretch; /* Changed from center to stretch */
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 10px;
+  gap: 15px;
+}
+
+.correctionCard {
+  flex: 1;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: white;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column; /* Enable flex column layout */
+}
+
+.correctionCard:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.correctionCardHeader {
+  background-color: #f0f5ff;
+  padding: 14px 16px;
+  border-bottom: 1px solid #d0e1fd;
+  text-align: center;
+}
+
+.correctionCardHeader h5 {
+  margin: 0;
+  font-size: 17px;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+.correctionCardBody {
+  padding: 20px;
+  min-height: 150px; /* Set a fixed min-height for both cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1; /* Allow it to grow to fill available space */
+}
+
+.correctionArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #6c757d;
+  width: 40px;
+}
+
+.recordDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically */
+  gap: 15px;
+  height: 100%; /* Take full height of parent */
+}
+
+.timeDisplay, .timeInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.timeValue {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: monospace; /* For consistent width in time display */
+}
+
+.timeInput {
+  font-size: 24px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  width: 140px;
+  text-align: center;
+  transition: border-color 0.2s;
+  font-family: monospace; /* For consistent width in time display */
+}
+
+.formatHint {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.formatLabel {
+  font-size: 0.85em;
+  color: #555;
+  font-weight: normal;
+  margin-left: 4px;
+}
+
+.statusIndicator {
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+}
+
+.statusPlaceholder {
+  padding: 8px 16px;
+  border: 1px dashed #ccc;
+  border-radius: 20px;
+  color: #777;
+  font-style: italic;
+}
+
+.noRecordMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.successMessage, .errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.errorMessage {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.updateButton {
+  padding: 12px 28px;
+  background-color: #0069d9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.updateButton:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.updateButton:hover {
+  background-color: #005cbf;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.updateButton:hover:before {
+  left: 100%;
+}
+
+.updateButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.updateButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.updateButton:disabled:hover:before {
+  left: -100%;
+}
+
+/* Manual Input Field Styles */
+.manualInputField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.manualInputField label {
+  font-weight: bold;
+  min-width: 50px;
+}
+
+.dateInput {
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 180px;
+  transition: border-color 0.2s;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.statusPreview {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.timeInputContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.timeSelect {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 65px;
+  background-color: white;
+}
+
+.timeSeparator {
+  margin: 0 8px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Add these new styles to your Dashboard.module.css file */
+
+/* Card Container */
+.cardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+/* Date Group */
+.dateGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dateHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.dateBadge {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  margin-right: 1rem;
+}
+
+.dateDivider {
+  flex: 1;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Cards Grid */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Update Card */
+.updateCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.updateCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 0.5rem;
+}
+
+.versionPill {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.typePill {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.badgeBugfix {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.badgeFeature {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.badgePerformance {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.badgeSecurity {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.cardBody {
+  padding: 1rem;
+}
+
+.cardContent {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.cardContent strong {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.cardContent em {
+  font-style: italic;
+  color: #475569;
+}
+
+/* Footer */
+.cardsFooter {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.countIndicator {
+  display: inline-block;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+}
+
+.countNumber {
+  font-weight: 700;
+  color: #334155;
+}
+
+/* Add these new styles to your Dashboard.module.css file */
+
+/* Control Container */
+.controlsContainer {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Enhanced Search Input */
+.searchWrapper {
+  width: 100%;
+}
+
+.searchInputContainer {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.enhancedSearchInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-left: 2.5rem;
+  font-size: 0.95rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+  color: #334155;
+}
+
+.enhancedSearchInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.enhancedSearchInput::placeholder {
+  color: #94a3b8;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.searchClearButton {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+}
+
+.searchClearButton:hover {
+  color: #64748b;
+  background-color: #e2e8f0;
+}
+
+/* Enhanced Filter Buttons */
+.filterButtonsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.enhancedFilterButton {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 2rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.enhancedFilterButton:hover {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.activeEnhancedFilter {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.filterDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  display: inline-block;
+}
+
+.dotFeature {
+  background-color: #15803d;
+}
+
+.dotBugfix {
+  background-color: #b91c1c;
+}
+
+.dotPerformance {
+  background-color: #0369a1;
+}
+
+.dotSecurity {
+  background-color: #92400e;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 640px) {
+  .controlsContainer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .searchWrapper {
+    width: auto;
+  }
+  
+  .filterButtonsWrapper {
+    margin-top: 0;
+  }
+}
+
+/* Status Tags */
+.statusTagPresent {
+  background-color: #4caf50;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+
+.statusTagLate {
+  background-color: #ff9800;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+
+.statusTagAbsent {
+  background-color: #f44336;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+
+.loadingContainer, .errorContainer, .emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.loadingContainer i, .errorContainer i, .emptyContainer i {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+/* Type Tags */
+.typeTag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tagBlue {
+  background-color: #e7f5ff;
+  color: #1c7ed6;
+  border: 1px solid #74c0fc;
+}
+
+.tagOrange {
+  background-color: #fff4e6;
+  color: #f76707;
+  border: 1px solid #ffa94d;
+}
+
+/* Real Calendar Styles */
+.realCalendar {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+}
+
+.calendarMonth {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #1a202c;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.calendarTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.calendarTable th {
+  padding: 10px 0;
+  text-align: center;
+  font-weight: 600;
+  background-color: #f9fafb;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.sundayColumn {
+  color: #e53e3e !important;
+}
+
+.saturdayColumn {
+  color: #3182ce !important;
+}
+
+.calendarCell {
+  height: 100px;
+  border: 1px solid #e5e7eb;
+  vertical-align: top;
+  padding: 5px;
+  position: relative;
+}
+
+.emptyCell {
+  background-color: #f9fafb;
+}
+
+.dayNumber {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1a202c;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.calendarStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding-top: 15px;
+  text-align: center;
+}
+
+.onTimeStatus, .lateStatus, .absentStatus {
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.onTimeStatus {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.lateStatus {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.absentStatus {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.attendanceTime {
+  font-size: 0.75rem;
+  margin-top: 3px;
+  opacity: 0.8;
+}
+
+.presentDay {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.lateDay {
+  background-color: rgba(245, 158, 11, 0.05);
+}
+
+.absentDay {
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.calendarLegend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendIndicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.presentIndicator {
+  background-color: #d1fae5;
+  border: 1px solid #065f46;
+}
+
+.lateIndicator {
+  background-color: #fef3c7;
+  border: 1px solid #92400e;
+}
+
+.absentIndicator {
+  background-color: #fee2e2;
+  border: 1px solid #b91c1c;
+}
+
+/* Improved Date Controls */
+.dateControlsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.dateControlsLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 5px;
+}
+
+.dateButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.yearButtons, .monthButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.yearButton, .monthButton {
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.yearButton:hover, .monthButton:hover {
+  background-color: #e5e7eb;
+}
+
+.selectedDateButton {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.selectedDateButton:hover {
+  background-color: #1d4ed8;
+}

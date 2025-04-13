@@ -1,0 +1,63 @@
+/* Print styles to hide sidebar and topbar when printing */
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .sidebar,
+  .topbar,
+  .tabsHeader,
+  .searchContainer {
+    display: none !important;
+  }
+  
+  /* Ensure the print content takes up the full width */
+  .print-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Remove any page margins */
+  @page {
+    margin: 0.5cm;
+  }
+  
+  /* Hide any other non-essential elements */
+  button:not(.printButton) {
+    display: none !important;
+  }
+  
+  /* Hide the print button itself when printing */
+  .printButton {
+    display: none !important;
+  }
+  
+  /* Make sure table is properly displayed */
+  .attendanceTable {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: auto;
+  }
+  
+  /* Ensure table rows don't break across pages */
+  .attendanceTable tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  /* Make the table headers repeat on each page */
+  .attendanceTable thead {
+    display: table-header-group;
+  }
+  
+  /* Style adjustments for better print appearance */
+  body {
+    font-size: 12pt;
+  }
+  
+  /* Remove any backgrounds and set to black text on white */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}

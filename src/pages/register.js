@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useState } from "react";
@@ -15,49 +14,47 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Session timeout in milliseconds (10 minutes)
-const SESSION_TIMEOUT = 10 * 60 * 1000;
-
-export default function Home() {
+export default function Register() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    // Simple validation
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, password }),
+        body: JSON.stringify({ userId, password, name, email }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Calculate session expiry time (current time + 10 minutes)
-        const expiryTime = Date.now() + SESSION_TIMEOUT;
-        
-        // Store user data with expiry timestamp in localStorage
-        localStorage.setItem("user", JSON.stringify({
-          ...data.user,
-          sessionExpiry: expiryTime
-        }));
-        
-        // Redirect to dashboard after successful login
-        router.push("/dashboard");
+        // Redirect to login page after successful registration
+        router.push("/?registered=true");
       } else {
-        setError(data.message || "로그인에 실패했습니다.");
+        setError(data.message || "회원가입에 실패했습니다.");
       }
     } catch (err) {
-      setError("로그인 처리 중 오류가 발생했습니다.");
+      setError("회원가입 처리 중 오류가 발생했습니다.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -67,18 +64,18 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>로그인 시스템</title>
-        <meta name="description" content="MySQL 기반 로그인 시스템" />
+        <title>회원가입</title>
+        <meta name="description" content="MySQL 기반 로그인 시스템 회원가입" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${geistSans.variable} ${geistMono.variable}`}>
         <div className={styles.loginContainer}>
-          <h1 className={styles.title}>로그인</h1>
+          <h1 className={styles.title}>회원가입</h1>
           
           {error && <p className={styles.error}>{error}</p>}
           
-          <form onSubmit={handleLogin} className={styles.form}>
+          <form onSubmit={handleRegister} className={styles.form}>
             <div className={styles.formGroup}>
               <label htmlFor="userId">아이디</label>
               <input
@@ -103,17 +100,51 @@ export default function Home() {
               />
             </div>
             
+            <div className={styles.formGroup}>
+              <label htmlFor="confirmPassword">비밀번호 확인</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="name">이름</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="email">이메일</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+            
             <button 
               type="submit" 
               className={styles.button}
               disabled={loading}
             >
-              {loading ? "로그인 중..." : "로그인"}
+              {loading ? "처리 중..." : "회원가입"}
             </button>
           </form>
           
           <p className={styles.registerText}>
-            계정이 없으신가요? <a href="/register" className={styles.link}>회원가입</a>
+            이미 계정이 있으신가요? <a href="/" className={styles.link}>로그인</a>
           </p>
         </div>
       </main>

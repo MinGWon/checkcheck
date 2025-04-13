@@ -1,0 +1,460 @@
+import styles from "@/styles/Dashboard.module.css";
+import { useState, useEffect } from "react";
+import { parseStudentId, getStatusText } from "./AttendanceUtils";
+
+export default function StudentAttendance({ attendanceData, isLoading, setIsLoading }) {
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [studentAttendanceRecords, setStudentAttendanceRecords] = useState([]);
+  const [showStudentDetail, setShowStudentDetail] = useState(false);
+  
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [calendarData, setCalendarData] = useState([]);
+  
+  const [availableYears, setAvailableYears] = useState([]);
+  const [availableMonths, setAvailableMonths] = useState([]);
+
+  useEffect(() => {
+    if (showStudentDetail && studentAttendanceRecords.length > 0) {
+      generateCalendarData();
+    }
+  }, [selectedYear, selectedMonth, studentAttendanceRecords, showStudentDetail]);
+
+  useEffect(() => {
+    if (studentAttendanceRecords.length > 0) {
+      const yearMonthCombos = new Map();
+      
+      studentAttendanceRecords.forEach(record => {
+        const [year, month] = record.date.split('-');
+        const yearNum = parseInt(year);
+        const monthNum = parseInt(month);
+        
+        if (!yearMonthCombos.has(yearNum)) {
+          yearMonthCombos.set(yearNum, new Set());
+        }
+        yearMonthCombos.get(yearNum).add(monthNum);
+      });
+      
+      updateAvailableMonths(yearMonthCombos, selectedYear);
+    }
+  }, [selectedYear, studentAttendanceRecords]);
+
+  const generateCalendarData = () => {
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+    const firstDayOfMonth = new Date(selectedYear, selectedMonth - 1, 1).getDay();
+    
+    let calendarDays = Array(firstDayOfMonth).fill(null);
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const record = studentAttendanceRecords.find(r => r.date === dateStr);
+      
+      calendarDays.push({
+        day,
+        status: record ? record.status : null,
+        time: record ? record.time : null
+      });
+    }
+    
+    setCalendarData(calendarDays);
+  };
+
+  const extractAvailableDates = (records) => {
+    if (!records || records.length === 0) return;
+    
+    const yearMonthCombos = new Map();
+    
+    records.forEach(record => {
+      const [year, month] = record.date.split('-');
+      const yearNum = parseInt(year);
+      const monthNum = parseInt(month);
+      
+      if (!yearMonthCombos.has(yearNum)) {
+        yearMonthCombos.set(yearNum, new Set());
+      }
+      yearMonthCombos.get(yearNum).add(monthNum);
+    });
+    
+    const years = Array.from(yearMonthCombos.keys()).sort((a, b) => b - a);
+    setAvailableYears(years);
+    
+    if (years.length > 0 && selectedYear !== years[0]) {
+      setSelectedYear(years[0]);
+    }
+    
+    updateAvailableMonths(yearMonthCombos, selectedYear);
+  };
+
+  const updateAvailableMonths = (yearMonthCombos, year) => {
+    if (!yearMonthCombos) return;
+    
+    const months = yearMonthCombos.has(year) 
+      ? Array.from(yearMonthCombos.get(year)).sort((a, b) => a - b)
+      : [];
+    
+    setAvailableMonths(months);
+    
+    if (months.length > 0 && !months.includes(selectedMonth)) {
+      setSelectedMonth(months[0]);
+    }
+  };
+
+  const loadStudentAttendance = async (student) => {
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('/api/attendance-logs');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch student attendance data');
+      }
+      
+      const data = await response.json();
+      
+      const allDatesSet = new Set();
+      data.forEach(log => {
+        if (log.date && typeof log.date === 'string') {
+          const datePart = log.date.split(' ')[0];
+          allDatesSet.add(datePart);
+        }
+      });
+      const allDates = Array.from(allDatesSet).sort();
+      
+      const studentLogs = data.filter(log => log.stdid === student.stdid);
+      
+      const records = allDates.map(date => {
+        const log = studentLogs.find(log => log.date && log.date.startsWith(date));
+        
+        if (!log || !log.date) {
+          return {
+            date: date,
+            time: '-',
+            status: 'absent'
+          };
+        }
+        
+        const dateTime = log.date.split(' ');
+        const datePart = dateTime[0];
+        const timePart = dateTime[1] ? dateTime[1].substring(0, 5) : '-';
+        
+        const onTimeLimit = '07:30:00';
+        const lateLimit = '08:30:00';
+        
+        let status;
+        if (!dateTime[1]) {
+          status = 'absent';
+        } else if (dateTime[1] < onTimeLimit) {
+          status = 'onTime';
+        } else if (dateTime[1] < lateLimit) {
+          status = 'late';
+        } else {
+          status = 'absent';
+        }
+        
+        return {
+          date: datePart,
+          time: timePart,
+          status
+        };
+      });
+      
+      setStudentAttendanceRecords(records);
+      setShowStudentDetail(true);
+      
+      extractAvailableDates(records);
+      
+      generateCalendarData();
+      
+    } catch (error) {
+      console.error('Error fetching student attendance data:', error);
+      setStudentAttendanceRecords([]);
+      setShowStudentDetail(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStudentSearch = () => {
+    if (selectedStudent) {
+      loadStudentAttendance(selectedStudent);
+    }
+  };
+
+  const closeStudentDetail = () => {
+    setShowStudentDetail(false);
+    setSelectedStudent(null);
+    setStudentAttendanceRecords([]);
+  };
+
+  const handleStudentSelect = (e) => {
+    const stdid = e.target.value;
+    const student = attendanceData.students.find(s => s.stdid === stdid);
+    setSelectedStudent(student || null);
+  };
+
+  const handleYearChange = (year) => {
+    setSelectedYear(Number(year));
+  };
+
+  const handleMonthChange = (month) => {
+    setSelectedMonth(Number(month));
+  };
+
+  const getStatusClass = (status) => {
+    if (!status) return styles.noData;
+    switch(status) {
+      case 'onTime': return styles.statusOnTime;
+      case 'late': return styles.statusLate;
+      case 'absent': return styles.statusAbsent;
+      default: return '';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch(status) {
+      case 'onTime': return '✅';
+      case 'late': return '⚠️';
+      case 'absent': return '❌';
+      default: return '';
+    }
+  };
+  
+  const isWeekend = (index) => {
+    return index % 7 === 0 || index % 7 === 6;
+  };
+
+  return (
+    <>
+      <div className={styles.cardHeader}>
+        <div className={styles.headerWithAction}>
+          <h3>개별학생 출석조회</h3>
+        </div>
+      </div>
+      
+      <div className={styles.searchContainer}>
+        <div className={styles.searchGroup}>
+          <label htmlFor="studentSelect">학생 선택</label>
+          <div className={styles.searchControls}>
+            <select 
+              id="studentSelect" 
+              className={styles.select}
+              value={selectedStudent ? selectedStudent.stdid : ''}
+              onChange={handleStudentSelect}
+            >
+              <option value="">학생을 선택하세요</option>
+              {attendanceData.students.map(student => {
+                const { grade, class: classNum, number } = parseStudentId(student.stdid);
+                return (
+                  <option key={student.stdid} value={student.stdid}>
+                    ({grade}-{classNum}-{number}) {student.name}
+                  </option>
+                );
+              })}
+            </select>
+            
+            <button 
+              className={styles.searchButton}
+              onClick={handleStudentSearch}
+              disabled={isLoading || !selectedStudent}
+            >
+              {isLoading ? 
+                <><i className="fas fa-spinner fa-spin"></i> 처리 중...</> : 
+                <><i className="fas fa-search"></i> 조회</>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className={styles.tableContainer}>
+        {isLoading ? (
+          <div className={styles.loadingContainer}>
+            <i className="fas fa-spinner fa-spin"></i>
+            <span>출석 데이터를 불러오는 중...</span>
+          </div>
+        ) : showStudentDetail && selectedStudent ? (
+          <div className={styles.studentDetailCard}>
+            <div className={styles.studentInfo}>
+              <h4>
+                {selectedStudent.name} ({parseStudentId(selectedStudent.stdid).grade}학년 {parseStudentId(selectedStudent.stdid).class}반 {parseStudentId(selectedStudent.stdid).number}번)
+              </h4>
+              <div className={styles.dateControlsWrapper}>
+                <div className={styles.dateControlsLabel}>출석 기간:</div>
+                <div className={styles.dateButtonsContainer}>
+                  <div className={styles.yearButtons}>
+                    {availableYears.map(year => (
+                      <button
+                        key={year}
+                        onClick={() => handleYearChange(year)}
+                        className={`${styles.yearButton} ${selectedYear === year ? styles.selectedDateButton : ''}`}
+                      >
+                        {year}년
+                      </button>
+                    ))}
+                  </div>
+                  <div className={styles.monthButtons}>
+                    {availableMonths.map(month => (
+                      <button
+                        key={month}
+                        onClick={() => handleMonthChange(month)}
+                        className={`${styles.monthButton} ${selectedMonth === month ? styles.selectedDateButton : ''}`}
+                      >
+                        {month}월
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <button 
+                  className={styles.backButton}
+                  onClick={closeStudentDetail}
+                >
+                  <i className="fas fa-arrow-left"></i> 목록으로
+                </button>
+              </div>
+            </div>
+            
+            {studentAttendanceRecords.length > 0 ? (
+              <>
+                <div className={styles.realCalendar}>
+                  <div className={styles.calendarMonth}>
+                    {selectedYear}년 {selectedMonth}월
+                  </div>
+                  
+                  <table className={styles.calendarTable}>
+                    <thead>
+                      <tr>
+                        <th className={styles.sundayColumn}>일</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                        <th className={styles.saturdayColumn}>토</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.from(
+                        { length: Math.ceil(calendarData.length / 7) },
+                        (_, weekIndex) => (
+                          <tr key={weekIndex}>
+                            {calendarData
+                              .slice(weekIndex * 7, (weekIndex + 1) * 7)
+                              .map((day, dayIndex) => (
+                                <td 
+                                  key={dayIndex} 
+                                  className={`
+                                    ${styles.calendarCell}
+                                    ${!day ? styles.emptyCell : ''}
+                                    ${dayIndex === 0 ? styles.sundayColumn : ''}
+                                    ${dayIndex === 6 ? styles.saturdayColumn : ''}
+                                    ${day && day.status === 'onTime' ? styles.presentDay : ''}
+                                    ${day && day.status === 'late' ? styles.lateDay : ''}
+                                    ${day && day.status === 'absent' ? styles.absentDay : ''}
+                                  `}
+                                >
+                                  {day && (
+                                    <>
+                                      <div className={styles.dayNumber}>{day.day}</div>
+                                      {day.status && (
+                                        <div className={styles.calendarStatus}>
+                                          {day.status === 'onTime' && (
+                                            <div className={styles.onTimeStatus}>
+                                              출석
+                                              <div className={styles.attendanceTime}>{day.time}</div>
+                                            </div>
+                                          )}
+                                          {day.status === 'late' && (
+                                            <div className={styles.lateStatus}>
+                                              지각
+                                              <div className={styles.attendanceTime}>{day.time}</div>
+                                            </div>
+                                          )}
+                                          {day.status === 'absent' && (
+                                            <div className={styles.absentStatus}>결석</div>
+                                          )}
+                                        </div>
+                                      )}
+                                    </>
+                                  )}
+                                </td>
+                              ))
+                            }
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                  
+                  <div className={styles.calendarLegend}>
+                    <div className={styles.legendItem}>
+                      <span className={styles.legendIndicator + ' ' + styles.presentIndicator}></span>
+                      <span>출석</span>
+                    </div>
+                    <div className={styles.legendItem}>
+                      <span className={styles.legendIndicator + ' ' + styles.lateIndicator}></span>
+                      <span>지각</span>
+                    </div>
+                    <div className={styles.legendItem}>
+                      <span className={styles.legendIndicator + ' ' + styles.absentIndicator}></span>
+                      <span>결석</span>
+                    </div>
+                  </div>
+                </div>
+
+                <h5 className={styles.listViewHeader}>상세 출석 목록</h5>
+                <table className={styles.dataTable}>
+                  <thead>
+                    <tr>
+                      <th>날짜</th>
+                      <th>출석 시간</th>
+                      <th>상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {studentAttendanceRecords
+                      .filter(record => {
+                        const [year, month] = record.date.split('-');
+                        return parseInt(year) === selectedYear && parseInt(month) === selectedMonth;
+                      })
+                      .map((record, index) => (
+                        <tr key={index}>
+                          <td>{record.date}</td>
+                          <td>{record.time}</td>
+                          <td>
+                            <span className={`${styles.statusBadge} ${
+                              record.status === 'onTime' ? styles.statusCompleted :
+                              record.status === 'late' ? styles.statusProcessing :
+                              styles.statusPending
+                            }`}>
+                              {getStatusText(record.status)}
+                            </span>
+                          </td>
+                        </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            ) : (
+              <div className={styles.noDataMessage}>
+                <i className="fas fa-info-circle"></i>
+                <span>출석 기록이 없습니다.</span>
+              </div>
+            )}
+          </div>
+        ) : selectedStudent ? (
+          <div className={styles.noDataMessage}>
+            <i className="fas fa-info-circle"></i>
+            <span>'조회' 버튼을 눌러 {selectedStudent.name} 학생의 출석 기록을 확인하세요.</span>
+          </div>
+        ) : (
+          <div className={styles.noDataMessage}>
+            <i className="fas fa-info-circle"></i>
+            <span>학생을 선택하고 '조회' 버튼을 눌러 출석 기록을 확인하세요.</span>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
