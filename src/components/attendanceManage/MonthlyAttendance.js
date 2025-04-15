@@ -314,10 +314,10 @@ export default function MonthlyAttendance({
                 }}
               >
                 <colgroup>
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '13px' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '5%' }} />
                   {filteredDates.map(date => (
                     <col key={`header-col-${date}`} style={{ width: filteredDates.length <= 5 ? MAX_DATE_COLUMN_WIDTH : `${81 / filteredDates.length}%` }} />
                   ))}
@@ -385,10 +385,10 @@ export default function MonthlyAttendance({
                 }}
               >
                 <colgroup>
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '5px' }} />
-                  <col style={{ width: '13px' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '2%' }} />
+                  <col style={{ width: '5%' }} />
                   {filteredDates.map(date => (
                     <col key={`body-col-${date}`} style={{ width: filteredDates.length <= 5 ? MAX_DATE_COLUMN_WIDTH : `${81 / filteredDates.length}%` }} />
                   ))}
